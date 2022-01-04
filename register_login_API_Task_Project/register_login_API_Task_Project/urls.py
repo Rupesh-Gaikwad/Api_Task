@@ -16,9 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from myAPIs import views
+from rest_framework.authtoken import views as auth_token_view 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # API path to register new user.
     path('api/register/', views.RegistrationAPI.as_view()),
-    path('api/login/', views.LoginAPI.as_view()),
-    path('api/login/', views.LoginAPI.as_view())
+
+    # API path to login and generate token for valid user
+    path('api/login/', auth_token_view.obtain_auth_token),
+
+    # below path will return all users related sensitive data, but it is just for
+    # demo purpose to check token authentiation works or not.
+    #path('test-token/', views.TestTokenView.as_view())
 ]

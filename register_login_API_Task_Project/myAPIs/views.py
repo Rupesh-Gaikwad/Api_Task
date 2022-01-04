@@ -1,13 +1,15 @@
-from django.shortcuts import render
-from rest_framework import serializers
-from rest_framework.generics import CreateAPIView
+from rest_framework import authentication
+from rest_framework import permissions
+from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from rest_framework.response import Response
-from myAPIs.serializers import UserSerializer, UserLoginSerializer
-from rest_framework.authtoken.models import Token
+from myAPIs.serializers import UserSerializer, LoginSerializer
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
+#User registration api view
 class RegistrationAPI(APIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -21,12 +23,13 @@ class RegistrationAPI(APIView):
             user = User(username=username, email=email)
             user.set_password(serializer.validated_data['password'])
             user.save()
-            return Response({'message':'New user registered successfully.'})
+            return Response({'message':f'{username} you have been registered successfully.'})
         return Response(serializer.errors)
 
-class LoginAPI(APIView):
-    queryset = User.objects.all()
-    serializer_class = UserLoginSerializer
-
-    def post(self, request):
-        pass
+    
+#This view class was created just for demo purpose to check generated token works or not.
+# class TestTokenView(ListAPIView):
+#      queryset = User.objects.all()
+#      serializer_class = UserSerializer
+#      authentication_classes = [TokenAuthentication,]
+#      permission_classes = [IsAuthenticated,]
